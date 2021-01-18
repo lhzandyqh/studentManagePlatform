@@ -18,13 +18,13 @@ import Layout from '@/views/layout/Layout'
  **/
 
 /**
-* hidden: true                   if `hidden:true` will not show in the sidebar(default is false)
-* alwaysShow: true               if set true, will always show the root menu, whatever its child routes length
-*                                if not set alwaysShow, only more than one route under the children
-*                                it will becomes nested mode, otherwise not show the root menu
-* redirect: noredirect           if `redirect:noredirect` will no redirect in the breadcrumb
-* name:'router-name'             the name is used by <keep-alive> (must set!!!)
-* meta : {
+ * hidden: true                   if `hidden:true` will not show in the sidebar(default is false)
+ * alwaysShow: true               if set true, will always show the root menu, whatever its child routes length
+ *                                if not set alwaysShow, only more than one route under the children
+ *                                it will becomes nested mode, otherwise not show the root menu
+ * redirect: noredirect           if `redirect:noredirect` will no redirect in the breadcrumb
+ * name:'router-name'             the name is used by <keep-alive> (must set!!!)
+ * meta : {
     roles: ['admin','editor']    will control the page roles (you can set multiple roles)
     title: 'title'               the name show in sub-menu and breadcrumb (recommend set)
     icon: 'svg-name'             the icon show in the sidebar
@@ -32,7 +32,7 @@ import Layout from '@/views/layout/Layout'
     breadcrumb: false            if false, the item will hidden in breadcrumb(default is true)
     affix: true                  if true, the tag will affix in the tags-view
   }
-**/
+ **/
 export const constantRoutes = [
   {
     path: '/redirect',
@@ -113,49 +113,213 @@ export default new Router({
 
 export const asyncRoutes = [
   {
-    path: '/disciplinarymanagement',
+    path: '/diagnosticplatformManagement',
     component: Layout,
-    redirect: '/disciplinarymanagement/index',
-    children: [
-      {
-        path: 'index',
-        component: () => import('@/myViews/disciplinaryManagement/index'),
-        name: 'disciplinarymanagement',
-        meta: { title: '违纪处分管理', icon: 'guide', noCache: true }
-      }
-    ]
-  },
-  {
-    path: '/example',
-    component: Layout,
-    redirect: '/example/index',
+    redirect: '/diagnosticplatformManagement/index',
     alwaysShow: true, // will always show the root menu
     meta: {
-      title: '两层导航测试',
+      title: '诊改平台管理',
       icon: 'lock',
       roles: ['admin', 'editor'] // you can set roles in root nav
     },
     children: [
       {
-        path: 'oneindex',
-        component: () => import('@/myViews/test/oneIndex'),
-        name: 'oneindex',
+        path: 'diagnosticnewsManagement',
+        component: () => import('@/myViews/diagnosticplatformManagement/diagnosticnewsManagement'),
+        name: 'diagnosticnewsManagement',
         meta: {
-          title: '页面1',
-          roles: ['admin', 'editor'] // or you can only set roles in sub nav
-        }
-      },
-      {
-        path: 'twoindex',
-        component: () => import('@/myViews/test/twoIndex'),
-        name: 'twoindex',
-        meta: {
-          title: '页面2',
+          title: '诊改新闻管理',
           roles: ['admin', 'editor'] // or you can only set roles in sub nav
         }
       }
     ]
   },
+  {
+    path: '/disciplineManagement',
+    component: Layout,
+    redirect: '/disciplineManagement/index',
+    alwaysShow: true, // will always show the root menu
+    meta: {
+      title: '违纪处分管理',
+      icon: 'lock',
+      roles: ['admin', 'editor'] // you can set roles in root nav
+    },
+    children: [
+      {
+        path: 'disciplineMonitor',
+        component: () => import('@/myViews/disciplineManagement/disciplineMonitor'),
+        name: 'disciplineMonitor',
+        meta: {
+          title: '违纪监控',
+          roles: ['admin', 'editor'] // or you can only set roles in sub nav
+        }
+      },
+      {
+        path: 'disciplineExecute',
+        component: () => import('@/myViews/disciplineManagement/disciplineExecute'),
+        name: 'disciplineExecute',
+        meta: {
+          title: '违纪处分执行',
+          roles: ['admin', 'editor'] // or you can only set roles in sub nav
+        }
+      }
+    ]
+  },
+  {
+    path: '/pleasecancelManaagement',
+    component: Layout,
+    redirect: '/pleasecancelManaagement/index',
+    alwaysShow: true, // will always show the root menu
+    meta: {
+      title: '请销假管理',
+      icon: 'lock',
+      roles: ['admin', 'editor'] // you can set roles in root nav
+    },
+    children: [
+      {
+        path: 'monitor',
+        component: () => import('@/myViews/pleasecancelManaagement/monitor'),
+        name: 'monitor',
+        meta: {
+          title: '请销假监控',
+          roles: ['admin', 'editor'] // or you can only set roles in sub nav
+        }
+      },
+      {
+        path: 'check',
+        component: () => import('@/myViews/pleasecancelManaagement/check'),
+        name: 'check',
+        meta: {
+          title: '请销假审核',
+          roles: ['admin', 'editor'] // or you can only set roles in sub nav
+        }
+      },
+      {
+        path: 'history',
+        component: () => import('@/myViews/pleasecancelManaagement/history'),
+        name: 'history',
+        meta: {
+          title: '请销假历史',
+          roles: ['admin', 'editor'] // or you can only set roles in sub nav
+        }
+      }
+    ]
+  },
+  {
+    path: '/campusLifeManagement',
+    component: Layout,
+    redirect: '/campusLifeManagement/index',
+    alwaysShow: true, // will always show the root menu
+    meta: {
+      title: '校园生活管理',
+      icon: 'lock',
+      roles: ['admin', 'editor'] // you can set roles in root nav
+    },
+    children: [
+      {
+        path: 'activityReleased',
+        component: () => import('@/myViews/campusLifeManagement/activityReleased'),
+        name: 'assessmentreleased',
+        meta: {
+          title: '活动发布',
+          roles: ['admin', 'editor'] // or you can only set roles in sub nav
+        }
+      }
+    ]
+  },
+  {
+    path: '/secondClassroomManagement',
+    component: Layout,
+    redirect: '/secondClassroomManagement/index',
+    alwaysShow: true, // will always show the root menu
+    meta: {
+      title: '第二课堂管理',
+      icon: 'lock',
+      roles: ['admin', 'editor'] // you can set roles in root nav
+    },
+    children: [
+      {
+        path: 'assessmentreleased',
+        component: () => import('@/myViews/secondClassroomManagement/assessmentreleased'),
+        name: 'assessmentreleased',
+        meta: {
+          title: '测评发布',
+          roles: ['admin', 'editor'] // or you can only set roles in sub nav
+        }
+      },
+      {
+        path: 'evaluationresultsMonitoring',
+        component: () => import('@/myViews/secondClassroomManagement/evaluationresultsMonitoring'),
+        name: 'evaluationresultsMonitoring',
+        meta: {
+          title: '测评结果监控',
+          roles: ['admin', 'editor'] // or you can only set roles in sub nav
+        }
+      }
+    ]
+  },
+  {
+    path: '/campusgrantManagement',
+    component: Layout,
+    redirect: '/campusgrantManagement/index',
+    alwaysShow: true, // will always show the root menu
+    meta: {
+      title: '校园奖助管理',
+      icon: 'lock',
+      roles: ['admin', 'editor'] // you can set roles in root nav
+    },
+    children: [
+      {
+        path: 'scholarshipManagement',
+        component: () => import('@/myViews/campusgrantManagement/scholarshipManagement'),
+        name: 'scholarshipManagement',
+        meta: {
+          title: '奖学金管理',
+          roles: ['admin', 'editor'] // or you can only set roles in sub nav
+        }
+      },
+      {
+        path: 'fellowshipManagement',
+        component: () => import('@/myViews/campusgrantManagement/fellowshipManagement'),
+        name: 'fellowshipManagement',
+        meta: {
+          title: '助学金管理',
+          roles: ['admin', 'editor'] // or you can only set roles in sub nav
+        }
+      }
+    ]
+  },
+  // {
+  //   path: '/example',
+  //   component: Layout,
+  //   redirect: '/example/index',
+  //   alwaysShow: true, // will always show the root menu
+  //   meta: {
+  //     title: '两层导航测试',
+  //     icon: 'lock',
+  //     roles: ['admin', 'editor'] // you can set roles in root nav
+  //   },
+  //   children: [
+  //     {
+  //       path: 'oneindex',
+  //       component: () => import('@/myViews/test/oneIndex'),
+  //       name: 'oneindex',
+  //       meta: {
+  //         title: '页面1',
+  //         roles: ['admin', 'editor'] // or you can only set roles in sub nav
+  //       }
+  //     },
+  //     {
+  //       path: 'twoindex',
+  //       component: () => import('@/myViews/test/twoIndex'),
+  //       name: 'twoindex',
+  //       meta: {
+  //         title: '页面2',
+  //         roles: ['admin', 'editor'] // or you can only set roles in sub nav
+  //       }
+  //     }
+  //   ]
+  // },
   // {
   //   path: '/permission',
   //   component: Layout,
