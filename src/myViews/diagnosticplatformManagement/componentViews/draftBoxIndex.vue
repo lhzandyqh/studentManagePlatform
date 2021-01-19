@@ -107,7 +107,7 @@
       width="50%"
       :before-close="handleClose"
     >
-      <p>这是通知正文</p>
+      <p>通知正文</p>
       <span slot="footer" class="dialog-footer">
         <el-button type="primary" @click="dialogVisibleTwo = false">确 定</el-button>
       </span>
