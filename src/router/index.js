@@ -128,9 +128,24 @@ export const asyncRoutes = [
         component: () => import('@/myViews/diagnosticplatformManagement/diagnosticnewsManagement'),
         name: 'diagnosticnewsManagement',
         meta: {
-          title: '诊改新闻管理',
+          title: '通知公告管理',
           roles: ['admin', 'editor'] // or you can only set roles in sub nav
         }
+        // children: [
+        //   {
+        //     path: 'aaa', // A 组件
+        //     component: resolve => require(['@/myViews/diagnosticplatformManagement/componentViews/aaa.vue'], resolve)
+        //   }
+        // ]
+      },
+      {
+        path: 'draftbox',
+        component: () => import('@/myViews/diagnosticplatformManagement/componentViews/draftBoxIndex.vue'),
+        name: 'draftbox',
+        meta: {
+          title: '草稿箱'
+        },
+        hidden: true
       }
     ]
   },
