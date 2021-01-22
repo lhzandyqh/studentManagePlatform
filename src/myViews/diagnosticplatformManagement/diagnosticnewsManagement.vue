@@ -2,7 +2,7 @@
   <div class="app-container">
     <div class="button_head">
       <div class="button_container">
-        <el-button type="primary" plain @click="goDraftBox">草稿箱</el-button>
+        <el-button type="primary" plain @click="goDraftBox">通知草稿箱</el-button>
       </div>
       <el-divider />
     </div>
@@ -26,23 +26,23 @@
             label="编号"
             width="100"
           >
-            <template slot-scope="scope">{{ scope.row.number }}</template>
+            <template slot-scope="scope">{{ scope.row.id }}</template>
           </el-table-column>
           <el-table-column
-            prop="notice_title"
+            prop="title"
             label="通知标题"
             width="600"
           />
           <el-table-column
-            prop="notice_leve"
+            prop="level"
             label="通知级别"
           />
           <el-table-column
-            prop="release_people"
+            prop="publisher"
             label="发布人"
           />
           <el-table-column
-            prop="release_date"
+            prop="createTime"
             label="发布日期"
           />
           <el-table-column
@@ -55,7 +55,7 @@
           </el-table-column>
         </el-table>
         <div style="margin-top: 20px">
-          <el-button @click="toggleSelection()">取消通知</el-button>
+          <el-button @click="toggleSelection()">批量取消通知发布</el-button>
         </div>
       </div>
     </div>
@@ -65,7 +65,7 @@
       width="50%"
       :before-close="handleClose"
     >
-      <p>这是一段信息</p>
+      <p>{{ content }}</p>
       <span slot="footer" class="dialog-footer">
         <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
       </span>
@@ -73,11 +73,13 @@
   </div>
 </template>
 <script>
+import { getNoticeByStatus, noticeStateEdit } from '@/api/noticeManagement'
 export default {
   name: 'DiagnosticnewsManagement',
   data() {
     return {
       dialogVisible: false,
+      content: '',
       tableData: [
         {
           number: '00001',
@@ -98,8 +100,26 @@ export default {
       multipleSelection: []
     }
   },
+  mounted() {
+    this.getAllShowNowNotice()
+  },
   methods: {
     toggleSelection(rows) {
+      for (const i in this.multipleSelection) {
+        const prams = {
+          id: this.multipleSelection[i].id,
+          state: '2'
+        }
+        noticeStateEdit(prams).then(reponse => {
+          console.log('测试批量取消发布')
+          console.log(reponse.data)
+          this.getAllShowNowNotice()
+        })
+      }
+      this.$message({
+        message: '批量取消发布成功',
+        type: 'success'
+      })
       if (rows) {
         rows.forEach(row => {
           this.$refs.multipleTable.toggleRowSelection(row)
@@ -125,6 +145,17 @@ export default {
     getNoticeContent: function(row) {
       this.dialogVisible = true
       console.log(row)
+      this.content = row.content
+    },
+    getAllShowNowNotice: function() {
+      const prams = {
+        state: 1
+      }
+      getNoticeByStatus(prams).then(response => {
+        console.log('测试获取当前正在展示的通知')
+        console.log(response.data.data)
+        this.tableData = response.data.data
+      })
     }
   }
 }

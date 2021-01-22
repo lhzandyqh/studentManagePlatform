@@ -143,7 +143,7 @@ export const asyncRoutes = [
         component: () => import('@/myViews/diagnosticplatformManagement/componentViews/draftBoxIndex.vue'),
         name: 'draftbox',
         meta: {
-          title: '草稿箱'
+          title: '通知草稿箱'
         },
         hidden: true
       }
@@ -239,6 +239,16 @@ export const asyncRoutes = [
           title: '活动发布',
           roles: ['admin', 'editor'] // or you can only set roles in sub nav
         }
+      },
+      {
+        path: 'activityDraft',
+        component: () => import('@/myViews/campusLifeManagement/activityDraftBox'),
+        name: 'activitydraft',
+        meta: {
+          title: '活动草稿箱',
+          roles: ['admin', 'editor'] // or you can only set roles in sub nav
+        },
+        hidden: true
       }
     ]
   },
