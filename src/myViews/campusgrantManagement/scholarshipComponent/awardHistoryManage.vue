@@ -25,8 +25,8 @@
           width="100"
         />
         <el-table-column
-          prop="奖学金名称"
-          label="姓名"
+          prop="name"
+          label="奖学金名称"
         />
         <el-table-column
           prop="address"
