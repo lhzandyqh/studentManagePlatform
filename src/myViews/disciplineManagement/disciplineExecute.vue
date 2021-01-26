@@ -40,6 +40,7 @@
         ref="multipleTable"
         :data="tableData.slice((currentPage-1)*pageSize,currentPage*pageSize)"
         tooltip-effect="dark"
+        border
         style="width: 100%"
         @selection-change="handleSelectionChange"
       >
