@@ -4,6 +4,7 @@
       <div class="search_container">
         <span>年度：</span>
         <el-select v-model="searchForm.year" placeholder="请选择年度">
+          <el-option label="2021" value="2021" />
           <el-option label="2020" value="2020" />
           <el-option label="2019" value="2019" />
           <el-option label="2018" value="2018" />
@@ -45,12 +46,12 @@
         <el-table-column
           prop="year"
           label="年度"
-          width="180"
+          width="100"
         />
         <el-table-column
           prop="name"
           label="姓名"
-          width="180"
+          width="120"
         />
         <el-table-column
           prop="number"
@@ -71,6 +72,10 @@
         <el-table-column
           prop="endDate"
           label="请假结束时间"
+        />
+        <el-table-column
+          prop="date"
+          label="请假天数"
         />
         <el-table-column
           label="操作"
@@ -128,7 +133,8 @@ export default {
           major: '口腔医学',
           type: '事假',
           beginDate: '2020-11-23',
-          endDate: '2020-11-25'
+          endDate: '2020-11-25',
+          date: '2'
         }
       ],
       currentPage: 1,

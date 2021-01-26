@@ -14,16 +14,16 @@
             </el-select>
           </template>
         </div>
-        <div class="block" style="display:inline-block">
-          <!--          <span class="demonstration">请选择请假时间段</span>-->
-          <el-date-picker
-            v-model="value1"
-            type="datetimerange"
-            range-separator="至"
-            start-placeholder="开始日期"
-            end-placeholder="结束日期"
-          />
-        </div>
+        <!--        <div class="block" style="display:inline-block">-->
+        <!--          <span class="demonstration">请选择请假时间段</span>-->
+        <!--          <el-date-picker-->
+        <!--            v-model="value1"-->
+        <!--            type="datetimerange"-->
+        <!--            range-separator="至"-->
+        <!--            start-placeholder="开始日期"-->
+        <!--            end-placeholder="结束日期"-->
+        <!--          />-->
+        <!--        </div>-->
         <el-button type="primary">搜索</el-button>
       </el-header>
     </el-container>
@@ -89,18 +89,26 @@
         </el-table-column>
       </el-table>
       <el-dialog
-        title="请选择审核状态"
+        title="审核"
         :visible.sync="dialogVisible"
-        width="20%"
+        width="50%"
         :before-close="handleClose"
       >
-        <div>
-          <el-radio v-model="radio1" label="1" border>通过</el-radio>
-          <el-radio v-model="radio1" label="2" border>不通过</el-radio>
+        <span class="audit_title">审核原因</span>
+        <el-divider />
+        <p>这里全部都是审核原因</p>
+        <span class="audit_title">附件</span>
+        <el-divider />
+        <el-carousel trigger="click" height="200px">
+          <el-carousel-item v-for="(src,item) in imgs" :key="item">
+            <img :src="src" style="max-width: 100%;max-height: 100%;display: block; margin: 0 auto;">
+          </el-carousel-item>
+        </el-carousel>
+        <div class="foot" style="text-align: center;margin-top: 30px">
+          <el-button type="success" size="small" plain @click="huojiangAuditing('通过')">通过</el-button>
+          <el-button type="danger" size="small" plain @click="huojiangAuditing('不通过')">未通过</el-button>
+          <el-button type="primary" size="small" plain @click="dialogVisible = false">关闭</el-button>
         </div>
-        <span slot="footer" class="dialog-footer">
-          <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
-        </span>
       </el-dialog>
       <!--      分页-->
       <div class="fenye">
@@ -136,31 +144,31 @@ export default {
         label: '3'
       }],
       value: '',
-      pickerOptions: {
-        shortcuts: [{
-          onClick(picker) {
-            const end = new Date()
-            const start = new Date()
-            start.setTime(start.getTime() - 3600 * 1000 * 24 * 7)
-            picker.$emit('pick', [start, end])
-          }
-        }, {
-          onClick(picker) {
-            const end = new Date()
-            const start = new Date()
-            start.setTime(start.getTime() - 3600 * 1000 * 24 * 30)
-            picker.$emit('pick', [start, end])
-          }
-        }, {
-          onClick(picker) {
-            const end = new Date()
-            const start = new Date()
-            start.setTime(start.getTime() - 3600 * 1000 * 24 * 90)
-            picker.$emit('pick', [start, end])
-          }
-        }]
-      },
-      value1: [new Date(2000, 10, 10, 10, 10), new Date(2000, 10, 11, 10, 10)],
+      // pickerOptions: {
+      //   shortcuts: [{
+      //     onClick(picker) {
+      //       const end = new Date()
+      //       const start = new Date()
+      //       start.setTime(start.getTime() - 3600 * 1000 * 24 * 7)
+      //       picker.$emit('pick', [start, end])
+      //     }
+      //   }, {
+      //     onClick(picker) {
+      //       const end = new Date()
+      //       const start = new Date()
+      //       start.setTime(start.getTime() - 3600 * 1000 * 24 * 30)
+      //       picker.$emit('pick', [start, end])
+      //     }
+      //   }, {
+      //     onClick(picker) {
+      //       const end = new Date()
+      //       const start = new Date()
+      //       start.setTime(start.getTime() - 3600 * 1000 * 24 * 90)
+      //       picker.$emit('pick', [start, end])
+      //     }
+      //   }]
+      // },
+      // value1: [new Date(2000, 10, 10, 10, 10), new Date(2000, 10, 11, 10, 10)],
       tableData:
         [
           {
@@ -269,6 +277,13 @@ export default {
   line-height: 60px;
 }
 .fenye {
+  text-align: center;
+  margin-top: 20px;
+}
+.audit_title {
+  font-weight: bold;
+}
+.foot{
   text-align: center;
   margin-top: 20px;
 }
