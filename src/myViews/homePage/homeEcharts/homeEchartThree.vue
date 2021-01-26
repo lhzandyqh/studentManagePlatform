@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <div class="head_title">
-      <span>各院系违纪情况统计图</span>
+      <span>各院系请假情况统计图</span>
     </div>
     <div class="search_container">
       <span>月份：</span>
@@ -21,7 +21,7 @@
       </el-select>
     </div>
     <div class="">
-      <div id="homeone" style="width: 100%;height:350px;" />
+      <div id="homethree" style="width: 100%;height:350px;" />
     </div>
   </div>
 </template>
@@ -30,7 +30,7 @@
 import echarts from 'echarts'
 require('echarts/theme/macarons')
 export default {
-  name: 'HomeEchartOne',
+  name: 'HomeEchartThree',
   data() {
     return {
       searchForm: {
@@ -55,7 +55,7 @@ export default {
           }
         },
         legend: {
-          data: ['处分人数', '严重处分人数']
+          data: ['事假人数', '病假人数', '请假总人数']
         },
         xAxis: [
           {
@@ -90,15 +90,20 @@ export default {
         ],
         series: [
           {
-            name: '处分人数',
+            name: '事假人数',
+            type: 'bar',
+            data: [4, 6, 8, 12, 10, 7, 2, 8]
+          },
+          {
+            name: '病假人数',
             type: 'bar',
             data: [12, 4, 7, 23, 25, 7, 13, 12]
           },
           {
-            name: '严重处分人数',
+            name: '请假总人数',
             type: 'line',
             yAxisIndex: 1,
-            data: [2, 2, 3, 5, 6, 10, 2, 4]
+            data: [16, 10, 15, 35, 14, 15, 15, 20]
           }
         ]
       }
@@ -109,7 +114,7 @@ export default {
   },
   methods: {
     initChart: function() {
-      this.chart = echarts.init(document.getElementById('homeone'), 'macarons')
+      this.chart = echarts.init(document.getElementById('homethree'), 'macarons')
       // this.chart = echarts.init(document.getElementById('testone'))
       this.chart.setOption(this.option)
     }

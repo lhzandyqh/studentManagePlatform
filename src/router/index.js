@@ -132,6 +132,15 @@ export const asyncRoutes = [
           title: '通知公告管理',
           roles: ['admin', 'editor'] // or you can only set roles in sub nav
         }
+      },
+      {
+        path: 'platformusermanagement',
+        component: () => import('@/myViews/diagnosticplatformManagement/platformUserManagement'),
+        name: 'platformusermanagement',
+        meta: {
+          title: '平台用户管理',
+          roles: ['admin', 'editor'] // or you can only set roles in sub nav
+        }
         // children: [
         //   {
         //     path: 'aaa', // A 组件
@@ -161,15 +170,15 @@ export const asyncRoutes = [
       roles: ['admin', 'editor'] // you can set roles in root nav
     },
     children: [
-      {
-        path: 'disciplineMonitor',
-        component: () => import('@/myViews/disciplineManagement/disciplineMonitor'),
-        name: 'disciplineMonitor',
-        meta: {
-          title: '违纪监控',
-          roles: ['admin', 'editor'] // or you can only set roles in sub nav
-        }
-      },
+      // {
+      //   path: 'disciplineMonitor',
+      //   component: () => import('@/myViews/disciplineManagement/disciplineMonitor'),
+      //   name: 'disciplineMonitor',
+      //   meta: {
+      //     title: '违纪监控',
+      //     roles: ['admin', 'editor'] // or you can only set roles in sub nav
+      //   }
+      // },
       {
         path: 'disciplineExecute',
         component: () => import('@/myViews/disciplineManagement/disciplineExecute'),
@@ -192,15 +201,15 @@ export const asyncRoutes = [
       roles: ['admin', 'editor'] // you can set roles in root nav
     },
     children: [
-      {
-        path: 'monitor',
-        component: () => import('@/myViews/pleasecancelManaagement/monitor'),
-        name: 'monitor',
-        meta: {
-          title: '请销假监控',
-          roles: ['admin', 'editor'] // or you can only set roles in sub nav
-        }
-      },
+      // {
+      //   path: 'monitor',
+      //   component: () => import('@/myViews/pleasecancelManaagement/monitor'),
+      //   name: 'monitor',
+      //   meta: {
+      //     title: '请销假监控',
+      //     roles: ['admin', 'editor'] // or you can only set roles in sub nav
+      //   }
+      // },
       {
         path: 'check',
         component: () => import('@/myViews/pleasecancelManaagement/check'),
