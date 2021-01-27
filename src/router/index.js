@@ -187,16 +187,16 @@ export const asyncRoutes = [
           title: '违纪处分执行',
           roles: ['admin', 'editor'] // or you can only set roles in sub nav
         }
-      },
-      {
-        path: 'disciplineHistory',
-        component: () => import('@/myViews/disciplineManagement/disciplineHistory'),
-        name: 'disciplineHistory',
-        meta: {
-          title: '违纪处分历史',
-          roles: ['admin', 'editor'] // or you can only set roles in sub nav
-        }
       }
+      // {
+      //   path: 'disciplineHistory',
+      //   component: () => import('@/myViews/disciplineManagement/disciplineHistory'),
+      //   name: 'disciplineHistory',
+      //   meta: {
+      //     title: '违纪处分历史',
+      //     roles: ['admin', 'editor'] // or you can only set roles in sub nav
+      //   }
+      // }
     ]
   },
   {

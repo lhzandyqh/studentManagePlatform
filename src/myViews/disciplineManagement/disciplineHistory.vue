@@ -24,14 +24,18 @@
         </el-select>
         <span class="left_control">类型：</span>
         <el-select v-model="searchForm.type" placeholder="请选择类型">
-          <el-option label="病假" value="病假" />
-          <el-option label="事假" value="事假" />
-          <el-option label="其他" value="其他" />
+          <el-option label="紧急" value="紧急" />
+          <el-option label="重要" value="重要" />
+          <el-option label="一般" value="一般" />
         </el-select>
-        <span class="left_control">审核状态：</span>
-        <el-select v-model="searchForm.status" placeholder="请选择审核状态">
-          <el-option label="批准" value="批准" />
-          <el-option label="未批准" value="未批准" />
+        <span class="left_control">处分结果：</span>
+        <el-select v-model="searchForm.status" placeholder="请选择处分结果">
+          <el-option label="警告" value="警告" />
+          <el-option label="严重警告" value="严重警告" />
+          <el-option label="记过" value="记过" />
+          <el-option label="留校察看" value="留校察看" />
+          <el-option label="勒令退学" value="勒令退学" />
+          <el-option label="开除学籍" value="开除学籍" />
         </el-select>
         <el-button type="primary" class="left_control">搜索</el-button>
       </div>
@@ -44,49 +48,44 @@
         style="width: 100%"
       >
         <el-table-column
-          prop="id"
-          label="编号"
-          width="100"
-        />
-        <el-table-column
           prop="year"
           label="年度"
           width="100"
         />
         <el-table-column
-          prop="stuName"
+          prop="name"
           label="姓名"
-          width="120"
+          width="100"
         />
         <el-table-column
-          prop="stuId"
+          prop="studentid"
           label="学号"
+          width="100"
         />
         <el-table-column
-          prop="stuCollege"
+          prop="major"
           label="院系"
         />
         <el-table-column
-          prop="leaveType"
-          label="请假类型"
+          prop="type"
+          label="违纪类型"
         />
         <el-table-column
-          prop="startDate"
-          label="请假开始时间"
+          prop="level"
+          label="处分级别"
         />
         <el-table-column
-          prop="endDate"
-          label="请假结束时间"
+          prop="result"
+          label="处分结果"
         />
         <el-table-column
-          label="审核状态"
-        >
-          <template slot-scope="scope">
-            <el-tag v-if="scope.row.checkStatus === '通过'" type="success">通过</el-tag>
-            <el-tag v-if="scope.row.checkStatus === '未通过'" type="danger">未通过</el-tag>
-            <el-tag v-if="scope.row.checkStatus === '已销假'" type="info">已销假</el-tag>
-          </template>
-        </el-table-column>
+          prop="beginDate"
+          label="处分执行时间"
+        />
+        <el-table-column
+          prop="disponer"
+          label="处置人"
+        />
         <el-table-column
           label="操作"
         >
@@ -108,20 +107,20 @@
       />
     </div>
     <el-dialog
-      title="学生请假详情"
+      title="违纪处分详情"
       :visible.sync="dialogVisible"
       width="50%"
       :before-close="handleClose"
     >
       <div class="detail">
-        <span>请假主题</span>
+        <span>违纪内容</span>
         <el-divider />
-        <p>{{ detailForm.leaveTheme }}</p>
+        <p>这里是违纪内容</p>
       </div>
       <div class="top-control detail">
-        <span>请假原因</span>
+        <span>处分结果</span>
         <el-divider />
-        <p>{{ detailForm.leaveReason }}</p>
+        <p>这里是处分结果</p>
       </div>
       <span slot="footer" class="dialog-footer">
         <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
@@ -130,9 +129,8 @@
   </div>
 </template>
 <script>
-import { getAllAuditingHistory } from '@/api/leaveManagement'
 export default {
-  name: 'History',
+  name: 'DisciplineHistory',
   data() {
     return {
       dialogVisible: false,
@@ -140,12 +138,13 @@ export default {
         {
           year: '2020',
           name: '小明',
-          number: '222323',
+          studentid: '222323',
           major: '口腔医学',
-          type: '事假',
+          type: '损坏公物',
+          level: '一般',
+          result: '警告',
           beginDate: '2020-11-23',
-          endDate: '2020-11-25',
-          date: '2'
+          disponer: '张老师'
         }
       ],
       currentPage: 1,
@@ -155,15 +154,8 @@ export default {
         major: '',
         status: '',
         type: ''
-      },
-      detailForm: {
-        leaveTheme: '',
-        leaveReason: ''
       }
     }
-  },
-  mounted() {
-    this.getHistory()
   },
   methods: {
     handleSizeChange(val) {
@@ -181,16 +173,7 @@ export default {
         .catch(_ => {})
     },
     getDetails: function(row) {
-      this.detailForm.leaveTheme = row.leaveTheme
-      this.detailForm.leaveReason = row.leaveReason
       this.dialogVisible = true
-    },
-    getHistory: function() {
-      getAllAuditingHistory().then(response => {
-        console.log('测试获取审核历史接口')
-        console.log(response.data)
-        this.tableData = response.data.data
-      })
     }
   }
 }
@@ -248,3 +231,4 @@ export default {
   font-weight: bold;
 }
 </style>
+
