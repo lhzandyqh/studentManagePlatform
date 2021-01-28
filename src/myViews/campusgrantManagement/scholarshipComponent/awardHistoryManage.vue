@@ -3,13 +3,13 @@
     <div class="button_head clearfix">
       <div class="search_container">
         <el-select v-model="type" placeholder="请选择年度">
-          <el-option label="2020" value="shanghai" />
-          <el-option label="2019" value="beijing" />
-          <el-option label="2018" value="beijing" />
-          <el-option label="2017" value="beijing" />
-          <el-option label="2016" value="beijing" />
+          <el-option label="2021" value="2021" />
+          <el-option label="2020" value="2020" />
+          <el-option label="2019" value="2019" />
+          <el-option label="2018" value="2018" />
+          <el-option label="2017" value="2017" />
         </el-select>
-        <el-button type="primary">搜索</el-button>
+        <el-button type="primary" @click="searchHistoryByYears">搜索</el-button>
       </div>
     </div>
     <el-divider />
@@ -20,28 +20,28 @@
         style="width: 100%"
       >
         <el-table-column
-          prop="date"
+          prop="id"
           label="编号"
           width="100"
         />
         <el-table-column
-          prop="奖学金名称"
-          label="姓名"
+          prop="scholarshipName"
+          label="奖学金名称"
         />
         <el-table-column
-          prop="address"
+          prop="applyYear"
           label="年度"
         />
         <el-table-column
-          prop="address"
+          prop="scholarshipLevel"
           label="级别"
         />
         <el-table-column
-          prop="address"
+          prop="startDate"
           label="申请开始日期"
         />
         <el-table-column
-          prop="address"
+          prop="endDate"
           label="申请结束日期"
         />
         <el-table-column
@@ -76,21 +76,21 @@
         style="width: 100%"
       >
         <el-table-column
-          prop="date"
+          prop="student_name"
           label="姓名"
           width="180"
         />
         <el-table-column
-          prop="name"
+          prop="student_number"
           label="学号"
           width="180"
         />
         <el-table-column
-          prop="address"
+          prop="major"
           label="专业"
         />
         <el-table-column
-          prop="address"
+          prop="audit_date"
           label="获奖日期"
         />
       </el-table>
@@ -112,6 +112,7 @@
 </template>
 
 <script>
+import { getScholarshipHistory, getScholarshipHistoryByYears, getScholarshipPeopleList } from '@/api/scholarshipManagement'
 export default {
   name: 'AwardHistoryManage',
   data() {
@@ -121,77 +122,12 @@ export default {
       currentPage: 1,
       currentPage2: 1,
       pageSize: 5,
-      tableData: [{
-        date: '2016-05-02',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1518 弄'
-      }, {
-        date: '2016-05-04',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1517 弄'
-      }, {
-        date: '2016-05-01',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1519 弄'
-      }, {
-        date: '2016-05-03',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1516 弄'
-      }, {
-        date: '2016-05-03',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1516 弄'
-      }, {
-        date: '2016-05-03',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1516 弄'
-      }],
-      tableDataTwo: [{
-        date: '2016-05-02',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1518 弄'
-      }, {
-        date: '2016-05-04',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1517 弄'
-      }, {
-        date: '2016-05-01',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1519 弄'
-      }, {
-        date: '2016-05-03',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1516 弄'
-      }, {
-        date: '2016-05-02',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1518 弄'
-      }, {
-        date: '2016-05-04',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1517 弄'
-      }, {
-        date: '2016-05-01',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1519 弄'
-      }, {
-        date: '2016-05-03',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1516 弄'
-      }, {
-        date: '2016-05-02',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1518 弄'
-      }, {
-        date: '2016-05-04',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1517 弄'
-      }, {
-        date: '2016-05-01',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1519 弄'
-      }]
+      tableData: [],
+      tableDataTwo: []
     }
+  },
+  mounted() {
+    this.getAllHistory()
   },
   methods: {
     handleClose(done) {
@@ -212,8 +148,44 @@ export default {
       this.currentPage2 = val
     },
     // 自己的方法
-    getScholarshipDetail: function() {
+    getScholarshipDetail: function(row) {
       this.dialogVisible = true
+      const prams = {
+        scholarshipId: row.id
+      }
+      getScholarshipPeopleList(prams).then(response => {
+        console.log('测试获取奖学金获奖人员名单')
+        console.log(response.data)
+        this.tableDataTwo = response.data.data
+      })
+    },
+    getAllHistory: function() {
+      getScholarshipHistory().then(response => {
+        console.log('测试获取所有的历史')
+        console.log(response.data)
+        this.tableData = response.data.data
+      })
+    },
+    searchHistoryByYears: function() {
+      if (this.type === '') {
+        this.$message({
+          message: '未选择查询条件',
+          type: 'warning'
+        })
+      } else {
+        const prams = {
+          year: this.type
+        }
+        getScholarshipHistoryByYears(prams).then(response => {
+          console.log('测试根据年份获取历史接口')
+          console.log(response.data)
+          this.tableData = response.data.data
+          this.$message({
+            message: '查询成功',
+            type: 'success'
+          })
+        })
+      }
     }
   }
 }

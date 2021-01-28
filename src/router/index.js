@@ -271,37 +271,37 @@ export const asyncRoutes = [
       }
     ]
   },
-  {
-    path: '/secondClassroomManagement',
-    component: Layout,
-    redirect: '/secondClassroomManagement/index',
-    alwaysShow: true, // will always show the root menu
-    meta: {
-      title: '第二课堂管理',
-      icon: 'lock',
-      roles: ['admin', 'editor'] // you can set roles in root nav
-    },
-    children: [
-      {
-        path: 'assessmentreleased',
-        component: () => import('@/myViews/secondClassroomManagement/assessmentreleased'),
-        name: 'assessmentreleased',
-        meta: {
-          title: '测评发布',
-          roles: ['admin', 'editor'] // or you can only set roles in sub nav
-        }
-      },
-      {
-        path: 'evaluationresultsMonitoring',
-        component: () => import('@/myViews/secondClassroomManagement/evaluationresultsMonitoring'),
-        name: 'evaluationresultsMonitoring',
-        meta: {
-          title: '测评结果监控',
-          roles: ['admin', 'editor'] // or you can only set roles in sub nav
-        }
-      }
-    ]
-  },
+  // {
+  //   path: '/secondClassroomManagement',
+  //   component: Layout,
+  //   redirect: '/secondClassroomManagement/index',
+  //   alwaysShow: true, // will always show the root menu
+  //   meta: {
+  //     title: '第二课堂管理',
+  //     icon: 'lock',
+  //     roles: ['admin', 'editor'] // you can set roles in root nav
+  //   },
+  //   children: [
+  //     {
+  //       path: 'assessmentreleased',
+  //       component: () => import('@/myViews/secondClassroomManagement/assessmentreleased'),
+  //       name: 'assessmentreleased',
+  //       meta: {
+  //         title: '测评发布',
+  //         roles: ['admin', 'editor'] // or you can only set roles in sub nav
+  //       }
+  //     },
+  //     {
+  //       path: 'evaluationresultsMonitoring',
+  //       component: () => import('@/myViews/secondClassroomManagement/evaluationresultsMonitoring'),
+  //       name: 'evaluationresultsMonitoring',
+  //       meta: {
+  //         title: '测评结果监控',
+  //         roles: ['admin', 'editor'] // or you can only set roles in sub nav
+  //       }
+  //     }
+  //   ]
+  // },
   {
     path: '/campusgrantManagement',
     component: Layout,
