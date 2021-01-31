@@ -5,11 +5,17 @@
         <div class="button_head">
           <div class="button_head clearfix">
             <div class="search_container">
-              <el-input v-model="type" style="width: 250px" placeholder="请输入用户姓名或工号" />
-              <el-button type="primary">搜索</el-button>
+              <span>姓名：</span>
+              <el-input v-model="teaSeaForm.teaName" style="width: 150px" placeholder="请输入用户姓名" />
+              <span>工号：</span>
+              <el-input v-model="teaSeaForm.teaUsername" style="width: 150px" placeholder="请输入用户工号" />
+              <span>部门：</span>
+              <el-input v-model="teaSeaForm.dept" style="width: 150px" placeholder="请输入用户部门" />
+              <el-button type="primary" @click="searchTeacher">搜索</el-button>
             </div>
             <div class="button_container">
               <el-button type="primary" plain @click="openImportDialog">批量新增用户</el-button>
+              <el-button type="text" @click="downloadStudentFileTwo">上传模板下载</el-button>
             </div>
           </div>
           <el-divider />
@@ -28,33 +34,33 @@
                 </template>
               </el-table-column>
               <el-table-column
-                prop="name"
+                prop="teaName"
                 label="姓名"
                 width="180"
               />
               <el-table-column
-                prop="number"
+                prop="teaUsername"
                 label="工号"
               />
               <el-table-column
                 prop="dept"
                 label="部门"
               />
-              <el-table-column
-                prop="type"
-                label="账号类型"
-              />
-              <el-table-column
-                prop="create_date"
-                label="账号创建日期"
-              />
+              <!--              <el-table-column-->
+              <!--                prop="type"-->
+              <!--                label="账号类型"-->
+              <!--              />-->
+              <!--              <el-table-column-->
+              <!--                prop="create_date"-->
+              <!--                label="账号创建日期"-->
+              <!--              />-->
               <el-table-column
                 label="操作"
               >
                 <template slot-scope="scope">
                   <el-button type="text" @click="permissionSet(scope.row)">权限设置</el-button>
-                  <el-button type="text" @click="passwordReset(scope.row)">密码重置</el-button>
-                  <el-button type="text" @click="userLoggedOff(scope.row)">账户注销</el-button>
+                  <el-button type="text" @click="teaPasswordRenew(scope.row)">密码重置</el-button>
+                  <el-button type="text" @click="teaUserLoggedOff(scope.row)">账户注销</el-button>
                 </template>
               </el-table-column>
             </el-table>
@@ -82,6 +88,7 @@
               <el-upload
                 class="upload-demo"
                 action="https://jsonplaceholder.typicode.com/posts/"
+                :http-request="teaUploadFiles"
                 :on-preview="handlePreview"
                 :on-remove="handleRemove"
                 :before-remove="beforeRemove"
@@ -97,7 +104,6 @@
           </el-form>
           <span slot="footer" class="dialog-footer">
             <el-button @click="dialogVisible = false">取 消</el-button>
-            <el-button type="primary" @click="confirmAddNotice">文件解析</el-button>
           </span>
         </el-dialog>
         <el-dialog
@@ -128,8 +134,17 @@
         <div class="button_head">
           <div class="button_head clearfix">
             <div class="search_container">
-              <el-input v-model="type" style="width: 250px" placeholder="请输入用户姓名或学号" />
-              <el-button type="primary">搜索</el-button>
+              <span>姓名：</span>
+              <el-input v-model="searchForm.userName" style="width: 150px" placeholder="请输入用户姓名" />
+              <span>学号：</span>
+              <el-input v-model="searchForm.studentNumber" style="width: 150px" placeholder="请输入用户学号" />
+              <span>学院：</span>
+              <el-input v-model="searchForm.college" style="width: 150px" placeholder="请输入用户学院" />
+              <span>专业：</span>
+              <el-input v-model="searchForm.major" style="width: 150px" placeholder="请输入用户专业" />
+              <span>班级：</span>
+              <el-input v-model="searchForm.classGrade" style="width: 150px" placeholder="请输入用户班级" />
+              <el-button type="primary" @click="searchStudent">搜索</el-button>
             </div>
             <div class="button_container">
               <el-button type="primary" plain @click="openImportDialogTwo">批量新增用户</el-button>
@@ -139,7 +154,7 @@
           <el-divider />
           <div class="table_container">
             <el-table
-              :data="tableData.slice((currentPage-1)*pageSize,currentPage*pageSize)"
+              :data="tableDataTwo.slice((currentPage2-1)*pageSize2,currentPage2*pageSize2)"
               stripe
               style="width: 100%"
             >
@@ -152,16 +167,16 @@
                 </template>
               </el-table-column>
               <el-table-column
-                prop="name"
+                prop="studentName"
                 label="姓名"
                 width="180"
               />
               <el-table-column
-                prop="number"
+                prop="studentNumber"
                 label="学号"
               />
               <el-table-column
-                prop="dept"
+                prop="college"
                 label="学院"
               />
               <el-table-column
@@ -176,7 +191,7 @@
                 label="操作"
               >
                 <template slot-scope="scope">
-                  <el-button type="text" @click="passwordReset(scope.row)">密码重置</el-button>
+                  <el-button type="text" @click="passwordRenew(scope.row)">密码重置</el-button>
                   <el-button type="text" @click="userLoggedOff(scope.row)">账户注销</el-button>
                 </template>
               </el-table-column>
@@ -204,6 +219,7 @@
                 <el-upload
                   class="upload-demo"
                   action="https://jsonplaceholder.typicode.com/posts/"
+                  :http-request="uploadFiles"
                   :on-preview="handlePreview"
                   :on-remove="handleRemove"
                   :before-remove="beforeRemove"
@@ -218,8 +234,8 @@
               </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
-              <el-button @click="dialogVisible = false">取 消</el-button>
-              <el-button type="primary" @click="confirmAddNotice">文件解析</el-button>
+              <el-button @click="dialogVisibleFour = false">取 消</el-button>
+              <!--              <el-button type="primary" @click="confirmAddNotice">文件解析</el-button>-->
             </span>
           </el-dialog>
         </div>
@@ -229,6 +245,7 @@
 </template>
 
 <script>
+import { studentListFileUpload, getStudentFromListByCondition, userPasswordReset, userAccountCancellation, teacherListFileUpload, getTeacherFromListByCondition } from '@/api/platformManagement'
 export default {
   name: 'PlatformUserManagement',
   data() {
@@ -242,27 +259,23 @@ export default {
       pageSize: 5,
       currentPage2: 1,
       pageSize2: 5,
-      tableData: [
-        {
-          name: '杨老师',
-          number: '519731',
-          dept: '教务处',
-          type: '管理员',
-          create_date: '2020-08-12'
-        }
-      ],
-      tableDataTwo: [
-        {
-          name: '杨同学',
-          number: '519731',
-          dept: '护理学院',
-          type: '普通',
-          create_date: '2020-08-12'
-        }
-      ],
+      tableData: [],
+      tableDataTwo: [],
       addForm: {},
       fileList: [],
-      checkList: []
+      checkList: [],
+      searchForm: {
+        userName: '',
+        studentNumber: '',
+        college: '',
+        major: '',
+        classGrade: ''
+      },
+      teaSeaForm: {
+        teaName: '',
+        teaUsername: '',
+        dept: ''
+      }
     }
   },
   methods: {
@@ -274,11 +287,11 @@ export default {
       this.currentPage = val
     },
     handleSizeChangeTwo(val) {
-      this.currentPage = 1
-      this.pageSize = val
+      this.currentPage2 = 1
+      this.pageSize2 = val
     },
     handleCurrentChangeTwo(val) {
-      this.currentPage = val
+      this.currentPage2 = val
     },
     openImportDialog: function() {
       this.dialogVisible = true
@@ -329,15 +342,46 @@ export default {
         })
       })
     },
-    userLoggedOff: function() {
+    userLoggedOff: function(row) {
       this.$confirm('此操作将该账号永久注销', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
+        const prams = {
+          loginName: row.studentNumber
+        }
+        userAccountCancellation(prams).then(response => {
+          console.log('测试账户注销接口')
+          console.log(response.data)
+          this.$message({
+            type: 'success',
+            message: '注销成功'
+          })
+        })
+      }).catch(() => {
         this.$message({
-          type: 'success',
-          message: '注销成功'
+          type: 'info',
+          message: '已取消注销'
+        })
+      })
+    },
+    teaUserLoggedOff: function(row) {
+      this.$confirm('此操作将该账号永久注销', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        const prams = {
+          loginName: row.teaUsername
+        }
+        userAccountCancellation(prams).then(response => {
+          console.log('测试账户注销接口')
+          console.log(response.data)
+          this.$message({
+            type: 'success',
+            message: '注销成功'
+          })
         })
       }).catch(() => {
         this.$message({
@@ -349,6 +393,122 @@ export default {
     downloadStudentFile: function() {
       var url = 'http://zhongkeruitong.top/zgplatform-management/%E5%AD%A6%E7%94%9F%E8%A1%A8.xlsx'
       window.open(url)
+    },
+    downloadStudentFileTwo: function() {
+      var url = 'https://zhongkeruitong.top/zgplatform-management/%E6%95%99%E5%B8%88%E8%A1%A8.xlsx'
+      window.open(url)
+    },
+    uploadFiles: function(params) {
+      const formData = new FormData()
+      formData.append('file', params.file)
+      studentListFileUpload(formData).then(response => {
+        console.log('测试学生用户名单上传')
+        console.log(response)
+        if (response.data.code === 0) {
+          this.$message({
+            message: '文件上传成功',
+            type: 'success'
+          })
+          this.dialogVisibleFour = false
+        }
+      })
+    },
+    teaUploadFiles: function(params) {
+      const formData = new FormData()
+      formData.append('file', params.file)
+      teacherListFileUpload(formData).then(response => {
+        console.log('测试教师用户名单上传')
+        console.log(response)
+        if (response.data.code === 0) {
+          this.$message({
+            message: '文件上传成功',
+            type: 'success'
+          })
+          this.dialogVisible = false
+        }
+      })
+    },
+    searchStudent: function() {
+      const prams = {
+        userName: this.searchForm.userName,
+        studentNumber: this.searchForm.studentNumber,
+        college: this.searchForm.college,
+        major: this.searchForm.major,
+        classGrade: this.searchForm.college
+      }
+      getStudentFromListByCondition(prams).then(resposne => {
+        console.log('测试根据条件搜索学生接口')
+        console.log(resposne.data)
+        this.tableDataTwo = resposne.data
+        this.$message({
+          type: 'success',
+          message: '搜索成功'
+        })
+      })
+    },
+    searchTeacher: function() {
+      const prams = {
+        teaName: this.teaSeaForm.teaName,
+        teaUsername: this.teaSeaForm.teaUsername,
+        dept: this.teaSeaForm.dept
+      }
+      getTeacherFromListByCondition(prams).then(resposne => {
+        console.log('测试根据条件搜索教师接口')
+        console.log(resposne.data)
+        this.tableData = resposne.data
+        this.$message({
+          type: 'success',
+          message: '搜索成功'
+        })
+      })
+    },
+    passwordRenew: function(row) {
+      this.$confirm('此操作将重置账户密码, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        const prams = {
+          loginName: row.studentNumber
+        }
+        userPasswordReset(prams).then(response => {
+          console.log('测试重置密码接口')
+          console.log(response.data)
+          this.$message({
+            message: '重置密码成功',
+            type: 'success'
+          })
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消密码重置'
+        })
+      })
+    },
+    teaPasswordRenew: function(row) {
+      this.$confirm('此操作将重置账户密码, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        const prams = {
+          loginName: row.teaUsername
+        }
+        userPasswordReset(prams).then(response => {
+          console.log('测试重置密码接口')
+          console.log(response.data)
+          this.$message({
+            message: '重置密码成功',
+            type: 'success'
+          })
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消密码重置'
+        })
+      })
     }
   }
 }
@@ -387,5 +547,9 @@ export default {
 .left_control{
   /*margin-left: 10%;*/
   text-align: center;
+}
+.search_container span {
+  font-size: 15px;
+  font-weight: bold;
 }
 </style>

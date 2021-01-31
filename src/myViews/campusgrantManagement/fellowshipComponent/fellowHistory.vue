@@ -3,14 +3,14 @@
     <div class="button_head clearfix">
       <div class="search_container">
         <el-select v-model="type" placeholder="请选择年度">
-          <el-option label="2021" value="beijing" />
-          <el-option label="2020" value="shanghai" />
-          <el-option label="2019" value="beijing" />
-          <el-option label="2018" value="beijing" />
-          <el-option label="2017" value="beijing" />
-          <el-option label="2016" value="beijing" />
+          <el-option label="2021" value="2021" />
+          <el-option label="2020" value="2020" />
+          <el-option label="2019" value="2019" />
+          <el-option label="2018" value="2018" />
+          <el-option label="2017" value="2017" />
+          <el-option label="2016" value="2016" />
         </el-select>
-        <el-button type="primary">搜索</el-button>
+        <el-button type="primary" @click="getHistoryByYear">搜索</el-button>
       </div>
     </div>
     <el-divider />
@@ -21,29 +21,34 @@
         style="width: 100%"
       >
         <el-table-column
-          prop="number"
+          prop="id"
           label="编号"
           width="200"
         />
         <el-table-column
-          prop="year"
+          prop="stipentName"
+          label="助学金名称"
+          width="200"
+        />
+        <el-table-column
+          prop="applyYear"
           label="年度"
           width="200"
         />
         <el-table-column
-          prop="starttime"
+          prop="startDate"
           label="申请开始日期"
         />
         <el-table-column
-          prop="finishtime"
+          prop="endDate"
           label="申请结束日期"
         />
         <el-table-column
           label="操作"
         >
           <template slot-scope="scope">
-            <el-button type="text" @click="getScholarshipDetail1(scope.row)">查看帮扶人员</el-button>
-            <el-button type="text" @click="getScholarshipDetail2(scope.row)">查看助学金明细</el-button>
+            <el-button type="text" @click="getHelpList(scope.row)">查看帮扶人员</el-button>
+            <el-button type="text" @click="getMoneyDetail(scope.row)">查看助学金明细</el-button>
             <el-button type="text">导出</el-button>
           </template>
         </el-table-column>
@@ -71,20 +76,20 @@
         style="width: 100%"
       >
         <el-table-column
-          prop="name"
+          prop="student_name"
           label="姓名"
           width="150"
         />
         <el-table-column
-          prop="studentid"
+          prop="student_number"
           label="学号"
         />
         <el-table-column
-          prop="academy"
+          prop="major"
           label="专业"
         />
         <el-table-column
-          prop="date"
+          prop="audit_date"
           label="帮扶日期"
         />
       </el-table>
@@ -108,29 +113,28 @@
       width="80%"
       :before-close="handleClose"
     >
-      <p>已成功发放助学金0次，补发0次，实际发放金额0元</p>
       <el-table
         :data="tableDataThree"
         style="width: 100%"
         border
       >
         <el-table-column
-          prop="number"
+          prop="id"
           label="序号"
           width="100"
         />
         <el-table-column
-          prop="studentid"
+          prop="student_number"
           label="学号"
           width="100"
         />
         <el-table-column
-          prop="name"
+          prop="student_name"
           label="姓名"
           width="100"
         />
         <el-table-column
-          prop="level"
+          prop="education_level"
           label="培养层次"
           width="100"
         />
@@ -140,7 +144,7 @@
           width="100"
         />
         <el-table-column
-          prop="issue_state"
+          prop="provide_status"
           label="发放状态"
           width="100"
         />
@@ -155,7 +159,7 @@
           width="100"
         />
         <el-table-column
-          prop="money"
+          prop="supply_again"
           label="补发金额"
           width="100"
         />
@@ -170,12 +174,12 @@
           width="100"
         />
         <el-table-column
-          prop="batch"
+          prop="stipent_batch"
           label="批次"
           width="100"
         />
         <el-table-column
-          prop="account"
+          prop="bank_card"
           label="账号后4位"
           width="100"
         />
@@ -190,7 +194,7 @@
           width="100"
         />
         <el-table-column
-          prop="graduateDate"
+          prop="graduation_date"
           label="毕业日期"
           width="100"
         />
@@ -200,6 +204,16 @@
           width="100"
         />
       </el-table>
+      <div class="fenye">
+        <el-pagination
+          small
+          :current-page="currentPage3"
+          page-size="5"
+          layout="prev, pager, next"
+          :total="tableDataThree.length"
+          @current-change="handleCurrentChange3"
+        />
+      </div>
       <span slot="footer" class="dialog-footer">
         <el-button type="primary" @click="dialogVisible2 = false">返 回</el-button>
       </span>
@@ -208,6 +222,7 @@
 </template>
 
 <script>
+import { getHelpHistory, getHelpHistoryByYear, getHelpPeopleList, getHelpMoneyDetails } from '@/api/helpMoneyManagement'
 export default {
   name: 'FellowHistory',
   data() {
@@ -217,38 +232,9 @@ export default {
       type: '',
       currentPage: 1,
       currentPage2: 1,
+      currentPage3: 1,
       pageSize: 5,
-      tableDataOne: [{
-        number: '0001',
-        year: '2020',
-        starttime: '2020-03-10',
-        finishtime: '2020-06-15'
-      }, {
-        number: '0001',
-        year: '2020',
-        starttime: '2020-03-10',
-        finishtime: '2020-06-15'
-      }, {
-        number: '0001',
-        year: '2020',
-        starttime: '2020-03-10',
-        finishtime: '2020-06-15'
-      }, {
-        number: '0001',
-        year: '2020',
-        starttime: '2020-03-10',
-        finishtime: '2020-06-15'
-      }, {
-        number: '0001',
-        year: '2020',
-        starttime: '2020-03-10',
-        finishtime: '2020-06-15'
-      }, {
-        number: '0001',
-        year: '2020',
-        starttime: '2020-03-10',
-        finishtime: '2020-06-15'
-      }],
+      tableDataOne: [],
       tableDataTwo: [{
         name: '王小虎',
         studentid: '2020040402080',
@@ -326,6 +312,9 @@ export default {
       }]
     }
   },
+  mounted() {
+    this.getAllHistory()
+  },
   methods: {
     handleClose(done) {
       this.$confirm('确认关闭？')
@@ -344,12 +333,65 @@ export default {
     handleCurrentChangeTwo(val) {
       this.currentPage2 = val
     },
+    handleCurrentChange3(val) {
+      this.currentPage3 = val
+    },
     // 自己的方法
     getScholarshipDetail1: function() {
       this.dialogVisible1 = true
     },
     getScholarshipDetail2: function() {
       this.dialogVisible2 = true
+    },
+    getAllHistory: function() {
+      getHelpHistory().then(response => {
+        console.log('测试获取助学金历史')
+        console.log(response.data)
+        this.tableDataOne = response.data.data
+      })
+    },
+    getHistoryByYear: function() {
+      if (this.type === '') {
+        this.$message({
+          message: '未选择年份',
+          type: 'warning'
+        })
+      } else {
+        const prams = {
+          year: this.type
+        }
+        getHelpHistoryByYear(prams).then(response => {
+          console.log('测试年份获取助学金历史')
+          console.log(response.data)
+          this.tableDataOne = response.data.data
+          this.$message({
+            message: '搜索成功',
+            type: 'success'
+          })
+        })
+      }
+    },
+    getHelpList: function(row) {
+      const prams = {
+        stipentId: row.id
+      }
+      getHelpPeopleList(prams).then(response => {
+        this.dialogVisible1 = true
+        console.log('测试获取帮扶人员名单')
+        console.log(response.data)
+        this.tableDataTwo = response.data.data
+      })
+    },
+    getMoneyDetail: function(row) {
+      const prams = {
+        stipentId: row.id
+      }
+      getHelpMoneyDetails(prams).then(response => {
+        this.dialogVisible2 = true
+        console.log('测试获取资金详情')
+        console.log(response.data)
+        this.tableDataThree = response.data.data
+      })
     }
   }
 }

@@ -3,10 +3,11 @@
     <div class="button_head clearfix">
       <div class="search_container">
         <el-select v-model="type" placeholder="请选择审核状态">
-          <el-option label="待审核" value="shanghai" />
-          <el-option label="已完成" value="beijing" />
+          <el-option label="待审核" value="待审核" />
+          <el-option label="审核通过" value="审核通过" />
+          <el-option label="审核未通过" value="审核不通过" />
         </el-select>
-        <el-button type="primary">搜索</el-button>
+        <el-button type="primary" @click="searchHelpByStatus">搜索</el-button>
       </div>
     </div>
     <el-divider />
@@ -17,30 +18,39 @@
         style="width: 100%"
       >
         <el-table-column
-          prop="number"
+          prop="id"
           label="编号"
           width="100"
         />
         <el-table-column
-          prop="name"
+          prop="student_name"
           label="姓名"
         />
         <el-table-column
-          prop="studentid"
+          prop="student_number"
           label="学号"
         />
         <el-table-column
-          prop="grade"
+          prop="class_grade"
           label="年级"
         />
         <el-table-column
-          prop="academy"
+          prop="college"
           label="所在院系"
         />
         <el-table-column
-          prop="date"
+          prop="apply_date"
           label="申请日期"
         />
+        <el-table-column
+          label="审核状态"
+        >
+          <template slot-scope="scope">
+            <el-tag v-if="scope.row.audit_status === '待审核'" type="info">待审核</el-tag>
+            <el-tag v-if="scope.row.audit_status === '审核通过'" type="success">审核通过</el-tag>
+            <el-tag v-if="scope.row.audit_status === '审核未通过'" type="warning">审核未通过</el-tag>
+          </template>
+        </el-table-column>
         <el-table-column
           label="操作"
         >
@@ -67,9 +77,9 @@
       width="50%"
       :before-close="handleClose"
     >
-      <span class="audit_title">审核原因</span>
-      <el-divider />
-      <p>这里全部都是审核原因</p>
+      <!--      <span class="audit_title">审核原因</span>-->
+      <!--      <el-divider />-->
+      <!--      <p>这里全部都是审核原因</p>-->
       <span class="audit_title">附件</span>
       <el-divider />
       <el-carousel trigger="click" height="200px">
@@ -78,8 +88,8 @@
         </el-carousel-item>
       </el-carousel>
       <div class="foot" style="text-align: center;margin-top: 30px">
-        <el-button type="success" size="small" plain @click="huojiangAuditing('通过')">通过</el-button>
-        <el-button type="danger" size="small" plain @click="huojiangAuditing('不通过')">未通过</el-button>
+        <el-button type="success" size="small" plain @click="confirmAuditing('审核通过')">通过</el-button>
+        <el-button type="danger" size="small" plain @click="confirmAuditing('审核不通过')">未通过</el-button>
         <el-button type="primary" size="small" plain @click="dialogVisible = false">关闭</el-button>
       </div>
     </el-dialog>
@@ -87,6 +97,7 @@
 </template>
 
 <script>
+import { getAllScholarshipData, getHelpMoneyByStatus, helpMoneyAuditing } from '@/api/helpMoneyManagement'
 export default {
   name: 'ReplyAudit',
   data() {
@@ -97,50 +108,12 @@ export default {
       imgs: [],
       currentPage: 1,
       pageSize: 5,
-      tableData: [{
-        number: '001',
-        name: '王小虎',
-        studentid: '2020040402080',
-        grade: '大三',
-        academy: '计算机学院',
-        date: '2016-05-02'
-      }, {
-        number: '001',
-        name: '王小虎',
-        studentid: '2020040402080',
-        grade: '大三',
-        academy: '计算机学院',
-        date: '2016-05-02'
-      }, {
-        number: '001',
-        name: '王小虎',
-        studentid: '2020040402080',
-        grade: '大三',
-        academy: '计算机学院',
-        date: '2016-05-02'
-      }, {
-        number: '001',
-        name: '王小虎',
-        studentid: '2020040402080',
-        grade: '大三',
-        academy: '计算机学院',
-        date: '2016-05-02'
-      }, {
-        number: '001',
-        name: '王小虎',
-        studentid: '2020040402080',
-        grade: '大三',
-        academy: '计算机学院',
-        date: '2016-05-02'
-      }, {
-        number: '001',
-        name: '王小虎',
-        studentid: '2020040402080',
-        grade: '大三',
-        academy: '计算机学院',
-        date: '2016-05-02'
-      }]
+      tableData: [],
+      auditingId: ''
     }
+  },
+  mounted() {
+    this.getAllHelpData()
   },
   methods: {
     handleClose(done) {
@@ -158,8 +131,57 @@ export default {
       this.currentPage = val
     },
     // 自己的方法
-    beginAuditing: function() {
+    beginAuditing: function(row) {
+      this.imgs = []
+      this.imgs.push(row.appendix)
+      this.auditingId = row.id
       this.dialogVisible = true
+    },
+    getAllHelpData: function() {
+      getAllScholarshipData().then(reponse => {
+        console.log('测试获取所有助学金审核接口')
+        console.log(reponse.data)
+        this.tableData = reponse.data.data
+      })
+    },
+    confirmAuditing: function(status) {
+      const prams = {
+        id: this.auditingId,
+        auditStatus: status,
+        auditDesc: '',
+        auditPerson: ''
+      }
+      helpMoneyAuditing(prams).then(response => {
+        console.log('测试助学金审核')
+        console.log(response.data)
+        this.dialogVisible = false
+        this.$message({
+          message: '审核完成',
+          type: 'success'
+        })
+        this.getAllHelpData()
+      })
+    },
+    searchHelpByStatus: function() {
+      if (this.type === '') {
+        this.$message({
+          message: '未选择审核状态',
+          type: 'warning'
+        })
+      } else {
+        const prams = {
+          auditStatus: this.type
+        }
+        getHelpMoneyByStatus(prams).then(response => {
+          console.log('测试根据审核状态获取助学金审核')
+          console.log(response.data)
+          this.tableData = response.data.data
+          this.$message({
+            message: '搜索成功',
+            type: 'success'
+          })
+        })
+      }
     }
   }
 }
