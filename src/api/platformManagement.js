@@ -54,3 +54,11 @@ export function getTeacherFromListByCondition(parems) {
   })
 }
 
+// 教师诊改平台权限设置
+export function teacherPlatformPermissionSet(parems) {
+  return request({
+    url: '/rectification/user/updatePermissions',
+    method: 'post',
+    params: parems
+  })
+}

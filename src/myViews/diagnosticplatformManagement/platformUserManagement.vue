@@ -115,7 +115,13 @@
           <el-form ref="form" :model="addForm" label-width="150px">
             <el-form-item label="账号可进入平台:">
               <el-checkbox-group v-model="checkList">
-                <el-checkbox label="内部质量管理平台" />
+                <!--                <el-checkbox label="内部质量管理平台" />-->
+                <!--                <el-checkbox label="教师发展平台" true-label="人事" />-->
+                <!--                <el-checkbox label="专业发展平台" true-label="专业" />-->
+                <!--                <el-checkbox label="资产管理平台" true-label="资产" />-->
+                <!--                <el-checkbox label="科研管理平台" true-label="科研" />-->
+                <!--                <el-checkbox label="在线OA平台" true-label="OA" />-->
+                <!--                <el-checkbox label="内部质量管理平台" />-->
                 <el-checkbox label="教师发展平台" />
                 <el-checkbox label="专业发展平台" />
                 <el-checkbox label="资产管理平台" />
@@ -126,7 +132,7 @@
           </el-form>
           <span slot="footer" class="dialog-footer">
             <el-button @click="dialogVisibleTwo = false">取 消</el-button>
-            <el-button type="primary" @click="confirmAddNotice">确 定</el-button>
+            <el-button type="primary" @click="confirmPermission">确 定</el-button>
           </span>
         </el-dialog>
       </el-tab-pane>
@@ -245,7 +251,7 @@
 </template>
 
 <script>
-import { studentListFileUpload, getStudentFromListByCondition, userPasswordReset, userAccountCancellation, teacherListFileUpload, getTeacherFromListByCondition } from '@/api/platformManagement'
+import { teacherPlatformPermissionSet, studentListFileUpload, getStudentFromListByCondition, userPasswordReset, userAccountCancellation, teacherListFileUpload, getTeacherFromListByCondition } from '@/api/platformManagement'
 export default {
   name: 'PlatformUserManagement',
   data() {
@@ -275,6 +281,14 @@ export default {
         teaName: '',
         teaUsername: '',
         dept: ''
+      },
+      loginName: '', // 每次要修改权限的用户名,
+      PlatformsMap: {
+        '教师发展平台': '教师',
+        '专业发展平台': '专业',
+        '资产管理平台': '资产',
+        '科研管理平台': '科研',
+        '在线OA平台': 'OA'
       }
     }
   },
@@ -322,8 +336,40 @@ export default {
       console.log(tab, event)
     },
     // 自己写的方法
-    permissionSet: function() {
+    permissionSet: function(row) {
+      this.loginName = row.teaUsername
       this.dialogVisibleTwo = true
+    },
+    confirmPermission: function() {
+      if (this.checkList.length === 0) {
+        this.$message({
+          message: '未选择权限',
+          type: 'warning'
+        })
+      } else {
+        console.log(this.checkList)
+        var perStr = ''
+        for (let i = 0; i < this.checkList.length; i++) {
+          const value = this.PlatformsMap[this.checkList[i]]
+          perStr = perStr + value + ','
+        }
+        console.log('测试perStr')
+        console.log(perStr)
+        const prams = {
+          loginName: this.loginName,
+          systemName: perStr
+        }
+        teacherPlatformPermissionSet(prams).then(response => {
+          console.log('测试更新平台权限')
+          console.log(response.data)
+          this.$message({
+            message: '权限设置成功',
+            type: 'success'
+          })
+          this.checkList = []
+          this.dialogVisibleTwo = false
+        })
+      }
     },
     passwordReset: function() {
       this.$confirm('此操作将该账号的密码重置为123456?', '提示', {
